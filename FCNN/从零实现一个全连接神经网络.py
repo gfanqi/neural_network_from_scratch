@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     show_line_and_data(data, y)
     mymodel = Mymodel()
-    mymodel.fit(data, y,epochs=1000, lossfunc=Funcs.ErrorSqureLoss,learning_rate=0.5)
+    mymodel.fit(data, y,epochs=1000, lossfunc=Funcs.SqureLossError,learning_rate=0.5)
     test_data = np.random.random(size = (1000,2))*3
     show_line_and_data(test_data,mymodel.predict(test_data))
     print(mymodel.predict(data))
