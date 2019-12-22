@@ -21,9 +21,11 @@ class Layers:
 			:return:
 			'''
 			w_shape = (Input.shape[1], self.output_category)
+			b_shape = (Input.shape[0], self.output_category)
 			self.w = np.mat(np.random.random(size=w_shape))
+			self.b = np.mat(np.random.random(size=b_shape))
 			self.Input = Input
-			result = self.Input * self.w
+			result = self.Input * self.w +self.b
 			self.result = result
 			return result
 
@@ -31,25 +33,29 @@ class Layers:
 			'''
 			反向传播算法的数学描述，公式参考
 			https://zhuanlan.zhihu.com/p/24863977
-
+			公式 Y = X * w +b ，
+			dY = dX * w + X * dw + db
+			   = I * dX * w + X * dw * I + I * db * I   (I是单位矩阵,
+			   公式里每个I都不一样维度，具体是多少要参考它与谁相乘）
+			   = np.kron(w,I)*dX  + np.kron(I,w)*dw + np.kron(I,I)
 			:param w_grad_from_next_layer:从下一层传过来的梯度
 			:param learning_rate:学习率
 			:return:
 			'''
 			mid_w_grad = np.mat(np.kron(np.eye(self.output_category), self.Input))
 			self.w_grad = w_grad_from_next_layer * mid_w_grad
+
+
 			mid_x_grad = np.kron(self.w.T, np.eye(self.Input.shape[0]))
 			self.x_grad = w_grad_from_next_layer * mid_x_grad
+
+			mid_b_grad = np.kron(np.eye(self.output_category), np.eye(self.Input.shape[0]))
+			self.b_grad = w_grad_from_next_layer * mid_b_grad
+
 			if learning_rate is not None:
 				self.w = self.w - learning_rate * self.w_grad.T
+				self.b = self.b - learning_rate * self.b_grad
 			return self.x_grad
 
-	class Relu:
-		'''
-		Relu激活层
-		'''
 
-	class Sigmod:
-		'''
-		Sigmod激活层
-		'''
+

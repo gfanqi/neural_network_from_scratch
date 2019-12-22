@@ -18,8 +18,8 @@ if __name__ == "__main__":
 
     show_line_and_data(data, y)
     mymodel = Mymodel()
-    mymodel.fit(data, y,epochs=100, lossfunc=Losses.ErrorSqure,learning_rate=0.5)
-    test_data = np.random.random(size = (10000,2))*3
+    mymodel.fit(data, y,epochs=1000, lossfunc=Losses.ErrorSqure,learning_rate=0.5)
+    test_data = np.random.random(size = (1000,2))*3
     show_line_and_data(test_data,mymodel.predict(test_data))
     print(mymodel.predict(data))
 
