@@ -78,7 +78,8 @@ class Layers:
 			:return:
 			'''
 			self.Input = Input
-			result = self.activate_func(Input)
+			self.activate_func_obj = self.activate_func(self.Input)
+			result = self.activate_func_obj.call()
 			self.result = result
 			return result
 
@@ -97,7 +98,7 @@ class Layers:
 			:return:
 			'''
 
-			mid_x_grad = self.activate_func.grad()
+			mid_x_grad = self.activate_func_obj.grad()
 			self.x_grad = w_grad_from_next_layer * mid_x_grad
 
 			return self.x_grad
