@@ -45,15 +45,12 @@ class Funcs:
 
         def grad(self):
             '''
-            梯度计算
+            梯度计算，
             :return:
             '''
+            pass
 
-            mid_grad = (self.Input>0)*1.0 #乘1 讲bollen类型转化为float类型
-            result = np.diagflat(mid_grad)
-            return result
-
-    class ErrorSqureLoss:
+    class SqureLossError:
         '''
         平方误差类
         '''
