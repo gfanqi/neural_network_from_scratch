@@ -29,7 +29,7 @@ class Layers:
 			self.result = result
 			return result
 
-		def backpropagation(self, w_grad_from_next_layer=None, learning_rate=None):
+		def backpropagation(self, w_grad_from_next_layer=None, learning_rate=None, use_bias=False):
 			'''
 			反向传播算法的数学描述，公式参考
 			https://zhuanlan.zhihu.com/p/24863977
@@ -37,7 +37,7 @@ class Layers:
 			dY = dX * w + X * dw + db
 			   = I * dX * w + X * dw * I + I * db * I   (I是单位矩阵,
 			   公式里每个I都不一样维度，具体是多少要参考它与谁相乘）
-			   = np.kron(w,I)*dX  + np.kron(I,w)*dw + np.kron(I,I)
+			vec(dY) = np.kron(w,I)*vec(dX)  + np.kron(I,w)*vec(dw) + np.kron(I,I)*vec(db)
 			:param w_grad_from_next_layer:从下一层传过来的梯度
 			:param learning_rate:学习率
 			:return:
@@ -49,13 +49,62 @@ class Layers:
 			mid_x_grad = np.kron(self.w.T, np.eye(self.Input.shape[0]))
 			self.x_grad = w_grad_from_next_layer * mid_x_grad
 
-			mid_b_grad = np.kron(np.eye(self.output_category), np.eye(self.Input.shape[0]))
-			self.b_grad = w_grad_from_next_layer * mid_b_grad
+			if use_bias == True:
+				mid_b_grad = np.kron(np.eye(self.output_category), np.eye(self.Input.shape[0]))
+				self.b_grad = w_grad_from_next_layer * mid_b_grad
 
 			if learning_rate is not None:
 				self.w = self.w - learning_rate * self.w_grad.T
-				self.b = self.b - learning_rate * self.b_grad
+				if use_bias == True:
+					self.b = self.b - learning_rate * self.b_grad
 			return self.x_grad
+
+	class Activation:
+		'''
+		激活层
+		'''
+		def __init__(self, activate_func):
+			'''
+			传入激活方程类
+			:param activate_func:
+			'''
+			self.activate_func = activate_func
+
+		def __call__(self, Input):
+			'''
+			使用魔法方法，实例化对象后，随机的方式初始化w参数，
+			实例化输入数据，计算本层前向传播方式
+			:param Input:
+			:return:
+			'''
+			self.Input = Input
+			result = self.activate_func(Input)
+			self.result = result
+			return result
+
+		def backpropagation(self, w_grad_from_next_layer=None, learning_rate=None, ):
+			'''
+			反向传播算法的数学描述，公式参考
+			https://zhuanlan.zhihu.com/p/24863977
+			公式 Y = f(X)   (f是逐元素函数)
+				dY = df(X)
+				   = f'(X) ⊙ dX (⊙表示出逐元素相乘，也就是通缩意义上的对应位置相乘）
+				所以
+				vec(dY) = np.diagflat(f'(X))* vec(dX)
+
+			:param w_grad_from_next_layer:从下一层传过来的梯度
+			:param learning_rate:学习率
+			:return:
+			'''
+
+			mid_x_grad = self.activate_func.grad()
+			self.x_grad = w_grad_from_next_layer * mid_x_grad
+
+			return self.x_grad
+
+
+
+
 
 
 
