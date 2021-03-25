@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
+from FCNN.mymodel import Mymodel
+from FCNN.losses import Funcs, SqureLossError
+
 print(np.__version__)
 
 def show_line_and_data(data, value, w=None, is_show=True):
@@ -9,7 +12,7 @@ def show_line_and_data(data, value, w=None, is_show=True):
 	data = np.array(data)
 	value = np.array(value)
 	value = value.flatten()
-
+	value = value>0.5
 	if w is not None:
 		# w是分割超平面的参数，
 		slope = np.array(w)[0][0] / np.array(w)[1][0]
@@ -21,6 +24,8 @@ def show_line_and_data(data, value, w=None, is_show=True):
 	plt.scatter(data[:, 0], data[:, 1], c=value)
 	# plt.ylim(-10, 10)
 	plt.show()
+
+
 
 
 if __name__ == "__main__":
@@ -35,8 +40,8 @@ if __name__ == "__main__":
 	y = np.mat(np.vstack((y1, y2)))
 
 	show_line_and_data(data, y)
-	# mymodel = Mymodel()
-	# mymodel.fit(data, y, epochs=100, lossfunc=Losses.ErrorSqure, learning_rate=0.5)
-	# test_data = np.random.random(size=(10000, 2)) * 3
-	# show_line_and_data(test_data, mymodel.predict(test_data))
-	# print(mymodel.predict(data))
+	mymodel = Mymodel()
+	mymodel.fit(data, y, epochs=1000, lossfunc =SqureLossError, learning_rate=0.5)
+	test_data = np.random.random(size=(10000, 2)) * 3
+	show_line_and_data(test_data, mymodel.predict(test_data))
+	print(mymodel.predict(data))

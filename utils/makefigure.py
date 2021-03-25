@@ -6,7 +6,7 @@ def show_line_and_data(data, value, w=None, is_show=True):
     data = np.array(data)
     value = np.array(value)
     value = value.flatten()
-
+    value = (value > 0.5).astype(np.int)
     # w_shape = w.shape
     data_shape = data.shape
     value_shape = value.shape
@@ -17,7 +17,7 @@ def show_line_and_data(data, value, w=None, is_show=True):
         prex = np.array(range(-10, 20))
         prey = -slope * prex - inx
         plt.plot(prex, prey)
-    plt.scatter(data[:, 0], data[:, 1],c=value)
+    plt.scatter(data[:, 0], data[:, 1], c=value)
     # plt.ylim(-10, 10)
     plt.show()
 

@@ -1,4 +1,4 @@
-from FCNN.layers import Layers
+from FCNN.layers import Layers, Dense
 from FCNN.models import Model
 
 
@@ -8,10 +8,10 @@ class Mymodel(Model):
 		初始化层
 		'''
 		super().__init__()
-		self.layer1 = Layers.Dense(2)
-		self.layer2 = Layers.Dense(2)
-		self.layer3 = Layers.Dense(3)
-		self.layer4 = Layers.Dense(1)
+		self.layer1 = Dense(2)
+		self.layer2 = Dense(2)
+		self.layer3 = Dense(3)
+		self.layer4 = Dense(1)
 
 	def call(self, data):
 		'''
@@ -39,3 +39,4 @@ class Mymodel(Model):
 		last_grad = self.layer3.backpropagation(last_grad)
 		last_grad = self.layer2.backpropagation(last_grad)
 		last_grad = self.layer1.backpropagation(last_grad)
+		return last_grad
